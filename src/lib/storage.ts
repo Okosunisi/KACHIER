@@ -8,8 +8,8 @@ import { KIND_ORDER, NUMBER_PREFIX } from './kinds';
  * Every access is wrapped in try/catch because storage can be blocked (private mode, full disk, etc.).
  */
 
-const DRAFT_KEY = (k: DocKind) => `kobodox:draft:v1:${k}`;
-const COUNTER_KEY = 'kobodox:counter:v1';
+const DRAFT_KEY = (k: DocKind) => `kachier:draft:v1:${k}`;
+const COUNTER_KEY = 'kachier:counter:v1';
 
 export function uid(): string {
   try {
@@ -21,7 +21,7 @@ export function uid(): string {
 }
 
 export function newItem(partial: Partial<LineItem> = {}): LineItem {
-  return { id: uid(), description: '', details: '', qty: '1', price: '', unit: '', weight: '', ...partial };
+  return { id: uid(), description: '', details: '', qty: '1', price: '', unit: '', weight: '', classType: 'HSN', code: '', category: '', taxCategory: '', unitCode: 'EA', ...partial };
 }
 
 export function newCharge(partial: Partial<ExtraCharge> = {}): ExtraCharge {
@@ -88,10 +88,29 @@ export function createDefaultDoc(kind: DocKind): DocData {
     businessPhone: '',
     businessEmail: '',
     businessAddress: '',
+    businessTaxId: '',
+    businessRegNo: '',
     customerName: '',
     customerPhone: '',
     customerEmail: '',
     customerAddress: '',
+    customerTaxId: '',
+    nrsEnabled: false,
+    businessId: '',
+    invoiceKind: '',
+    issueTime: new Date().toTimeString().slice(0, 8),
+    taxPointDate: '',
+    businessCity: '',
+    businessPostalZone: '',
+    businessCountry: 'NG',
+    customerCity: '',
+    customerPostalZone: '',
+    customerCountry: 'NG',
+    originalIrn: '',
+    originalIssueDate: '',
+    nrsIrn: '',
+    nrsCsid: '',
+    nrsQrDataUrl: '',
     number: peekNumber(kind),
     issueDate: today,
     dueDate: addDays(today, kind === 'quotation' ? 30 : 14), // invoice due date, quotation valid-until, order delivery date
@@ -176,6 +195,12 @@ export function createSeededDoc(kind: DocKind): DocData {
     businessPhone: other.businessPhone,
     businessEmail: other.businessEmail,
     businessAddress: other.businessAddress,
+    businessTaxId: other.businessTaxId ?? '',
+    businessRegNo: other.businessRegNo ?? '',
+    businessId: other.businessId ?? '',
+    businessCity: other.businessCity ?? '',
+    businessPostalZone: other.businessPostalZone ?? '',
+    businessCountry: other.businessCountry || 'NG',
     currency: other.currency,
     taxLabel: other.taxLabel,
     bankName: other.bankName,

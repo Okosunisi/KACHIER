@@ -8,6 +8,7 @@ import {
   Eye,
   FileText,
   ImagePlus,
+  Info,
   Loader2,
   MessageCircle,
   Pencil,
@@ -24,7 +25,10 @@ import { computeTotals, lineTotal } from '../lib/calc';
 import { CURRENCIES, formatMoney } from '../lib/currency';
 import { FREIGHT_PAYER_OPTIONS, SHIPMENT_STATUS_OPTIONS } from '../lib/docModel';
 import { fileBase, fileName, saveBlob } from '../lib/files';
-import { DUE_LABEL, KIND_COPY, TOTAL_LABEL } from '../lib/kinds';
+import { DUE_LABEL, KIND_COPY, KIND_HELP, TOTAL_LABEL } from '../lib/kinds';
+import { DocsIntro } from './DocsGuide';
+import { DocModeSelect, MODE_KINDS } from './DocModeSelect';
+import { TAX_CATEGORIES, nrsApplies, nrsPayload, nrsReadiness } from '../lib/nrs';
 import { processLogoFile } from '../lib/logo';
 import { sampleDoc } from '../lib/sample';
 import { canShareFiles, defaultMessage, whatsappLink, whatsappNumber } from '../lib/share';
@@ -52,6 +56,7 @@ export function Editor({ kind, template }: { kind: DocKind; template?: TemplateI
   const isVoucher = kind === 'payment-voucher';
   const isNote = kind === 'credit-note' || kind === 'debit-note';
   const isSO = kind === 'sales-order';
+  const nrsKind = nrsApplies(kind);
   const priced = !isWaybill; // waybills list goods, not prices
   const dueLabel = DUE_LABEL[kind]; // invoices, quotations and orders show a second date
   const hasRef = isReceipt || isVoucher || isNote;
@@ -59,6 +64,7 @@ export function Editor({ kind, template }: { kind: DocKind; template?: TemplateI
   const copy = KIND_COPY[kind];
   const [data, setData] = useState<DocData>(() => initialDoc(kind, template));
   const [attempted, setAttempted] = useState(false);
+  const [qrBad, setQrBad] = useState(false);
   const [dialog, setDialog] = useState<Dialog>(null);
   const [busy, setBusy] = useState<null | 'download' | 'share'>(null);
   const [toast, setToast] = useState<Toast>(null);
@@ -230,6 +236,7 @@ export function Editor({ kind, template }: { kind: DocKind; template?: TemplateI
   return (
     <>
       <div className="app-shell editor-page">
+        <DocsIntro />
         <div className="editor-toolbar">
           <div>
             <h1>Create {copy.noun}</h1>
@@ -248,6 +255,9 @@ export function Editor({ kind, template }: { kind: DocKind; template?: TemplateI
         <div className="editor-grid" data-tab={tab}>
           {/* ------------------------------ FORM ------------------------------ */}
           <div className="form-col">
+            {MODE_KINDS.includes(kind) && (
+              <DocModeSelect kind={kind} nrs={data.nrsEnabled} onChange={(v) => set('nrsEnabled', v)} />
+            )}
             <section className="card">
               <h2 className="card-title">
                 <span className="step">{nextStep()}</span> {copy.businessTitle}
@@ -283,6 +293,10 @@ export function Editor({ kind, template }: { kind: DocKind; template?: TemplateI
                 <Input label="Phone number" type="tel" value={data.businessPhone} onChange={(v) => set('businessPhone', v)} placeholder="+234 803 000 0000" autoComplete="tel" />
                 <Input label="Email" type="email" value={data.businessEmail} onChange={(v) => set('businessEmail', v)} error={shown.businessEmail} placeholder="you@business.com" autoComplete="email" />
               </div>
+              <div className="grid-2">
+                <Input label="Tax ID (optional)" inputMode="numeric" value={data.businessTaxId} onChange={(v) => set('businessTaxId', v)} hint="Your 13-digit Tax ID from the Nigeria Revenue Service" />
+                <Input label="RC number (optional)" value={data.businessRegNo} onChange={(v) => set('businessRegNo', v)} placeholder="e.g. RC 1234567" hint="Your CAC registration number" />
+              </div>
               <Textarea label="Address" rows={2} value={data.businessAddress} onChange={(v) => set('businessAddress', v)} placeholder={'Street, area\nCity, State'} />
             </section>
 
@@ -295,6 +309,7 @@ export function Editor({ kind, template }: { kind: DocKind; template?: TemplateI
                 <Input label="Phone number" type="tel" value={data.customerPhone} onChange={(v) => set('customerPhone', v)} placeholder="+234 809 000 0000" />
                 <Input label="Email" type="email" value={data.customerEmail} onChange={(v) => set('customerEmail', v)} error={shown.customerEmail} placeholder="customer@email.com" />
               </div>
+              <Input label="Customer Tax ID (optional)" inputMode="numeric" value={data.customerTaxId} onChange={(v) => set('customerTaxId', v)} hint="Business customers may ask for it to claim VAT" />
               <Textarea label="Address" rows={2} value={data.customerAddress} onChange={(v) => set('customerAddress', v)} placeholder={'Street, area\nCity, State'} />
             </section>
 
@@ -411,6 +426,20 @@ export function Editor({ kind, template }: { kind: DocKind; template?: TemplateI
                       <div className="line-total">
                         <span>Amount</span>
                         <strong>{money(lineTotal(it))}</strong>
+                      </div>
+                    </div>
+                  )}
+                  {nrsKind && data.nrsEnabled && (
+                    <div className="nrs-item">
+                      <strong>NRS product details</strong>
+                      <div className="grid-2">
+                        <Select label="Code type" value={it.classType} onChange={(v) => updateItem(it.id, { classType: v as LineItem['classType'] })} options={[{ value: 'HSN', label: 'HSN (goods)' }, { value: 'ISIC', label: 'ISIC (services)' }]} />
+                        <Input label={it.classType === 'ISIC' ? 'ISIC code' : 'HSN code'} value={it.code} onChange={(v) => updateItem(it.id, { code: v })} placeholder={it.classType === 'ISIC' ? 'e.g. 0114' : 'e.g. 2523.10'} />
+                      </div>
+                      <Input label={it.classType === 'ISIC' ? 'Service category' : 'Product category'} value={it.category} onChange={(v) => updateItem(it.id, { category: v })} />
+                      <div className="grid-2">
+                        <Select label="Tax category" value={it.taxCategory} onChange={(v) => updateItem(it.id, { taxCategory: v as LineItem['taxCategory'] })} options={[{ value: '', label: 'Follow invoice VAT rate' }, ...TAX_CATEGORIES]} />
+                        <Input label="Unit code" value={it.unitCode} onChange={(v) => updateItem(it.id, { unitCode: v.toUpperCase() })} hint="EA (each), KGM (kg), LTR (litre)" />
                       </div>
                     </div>
                   )}
@@ -533,6 +562,131 @@ export function Editor({ kind, template }: { kind: DocKind; template?: TemplateI
               </section>
             )}
 
+            {nrsKind && (data.nrsEnabled || kind === 'debit-note') && (
+            <section className="card">
+              <h2 className="card-title">
+                <span className="step">{nextStep()}</span> {kind === 'invoice' ? 'NRS e-invoice data' : 'NRS adjustment document data'}
+              </h2>
+              {kind === 'debit-note' && (
+                <label className="nrs-toggle">
+                  <input type="checkbox" checked={data.nrsEnabled} onChange={(e) => set('nrsEnabled', e.target.checked)} />
+                  <span>Prepare this document's data for NRS e-invoicing</span>
+                </label>
+              )}
+              <div className="hint" data-testid="nrs-distinction" style={{ margin: '8px 0' }}>
+                {kind === 'invoice' ? (
+                  <>
+                    <b>Standard Business Invoice:</b> generated by KACHIER for normal business transactions and records. <b>Officially Validated E-Invoice:</b> an invoice successfully processed through the official NRS electronic invoicing system. A KACHIER PDF is only validated if it carries official NRS details that you entered after real validation.
+                  </>
+                ) : (
+                  <>
+                    <b>Standard {KIND_COPY[kind].Noun}:</b> generated by KACHIER for normal business records. <b>Officially Validated NRS adjustment document:</b> a {KIND_COPY[kind].noun} successfully processed through the official NRS system. A KACHIER PDF is only validated if it carries official NRS details that you entered after real validation. It adjusts an earlier invoice, so check with an accountant or NRS whether yours must be submitted.
+                  </>
+                )}
+              </div>
+              {data.nrsEnabled && (
+                <>
+                  <p className="hint">
+                    This only prepares the data. KACHIER does not send {kind === 'invoice' ? 'invoices' : 'documents'} to NRS, so this document is <b>not</b> NRS-validated. The IRN and QR code are issued by NRS after validation and are not created here.
+                  </p>
+                  <Input label="NRS Business ID" value={data.businessId} onChange={(v) => set('businessId', v.trim())} hint="Given by NRS when your business is onboarded" />
+                  <div className="grid-2">
+                    <Select label="Invoice kind" value={data.invoiceKind} onChange={(v) => set('invoiceKind', v as DocData['invoiceKind'])} options={[{ value: '', label: 'Automatic (B2B if customer has a Tax ID)' }, { value: 'B2B', label: 'B2B (business to business)' }, { value: 'B2C', label: 'B2C (business to consumer)' }, { value: 'B2G', label: 'B2G (business to government)' }]} />
+                    <Input label="Issue time" type="time" step={1} value={data.issueTime} onChange={(v) => set('issueTime', v)} />
+                  </div>
+                  <Input label="Tax point date (optional)" type="date" value={data.taxPointDate} onChange={(v) => set('taxPointDate', v)} hint="Leave empty to use the issue date" />
+                  <div className="grid-3">
+                    <Input label="Your city" value={data.businessCity} onChange={(v) => set('businessCity', v)} />
+                    <Input label="Postal code" value={data.businessPostalZone} onChange={(v) => set('businessPostalZone', v)} />
+                    <Input label="Country code" value={data.businessCountry} onChange={(v) => set('businessCountry', v.toUpperCase().slice(0, 2))} />
+                  </div>
+                  <div className="grid-3">
+                    <Input label="Customer city" value={data.customerCity} onChange={(v) => set('customerCity', v)} />
+                    <Input label="Postal code" value={data.customerPostalZone} onChange={(v) => set('customerPostalZone', v)} />
+                    <Input label="Country code" value={data.customerCountry} onChange={(v) => set('customerCountry', v.toUpperCase().slice(0, 2))} />
+                  </div>
+                  {kind !== 'invoice' && (
+                    <div className="grid-2">
+                      <Input label="Original invoice IRN" value={data.originalIrn} onChange={(v) => set('originalIrn', v.trim())} hint="The IRN NRS gave the original invoice" />
+                      <Input label="Original invoice date" type="date" value={data.originalIssueDate} onChange={(v) => set('originalIssueDate', v)} />
+                    </div>
+                  )}
+                  {(() => {
+                    const r = nrsReadiness(data);
+                    return (
+                      <div className="nrs-check">
+                        <strong>{r.missing.length ? `${r.missing.length} detail${r.missing.length === 1 ? '' : 's'} still missing for NRS` : 'All NRS details are filled in'}</strong>
+                        {r.missing.length > 0 && <ul>{r.missing.slice(0, 12).map((m) => <li key={m}>{m}</li>)}{r.missing.length > 12 && <li>and {r.missing.length - 12} more</li>}</ul>}
+                        <p className="hint">Cannot be done inside KACHIER:</p>
+                        <ul>{r.notes.map((n) => <li key={n}>{n}</li>)}</ul>
+                      </div>
+                    );
+                  })()}
+                  <button type="button" className="btn outline full" onClick={() => saveBlob(new Blob([JSON.stringify(nrsPayload(data), null, 2)], { type: 'application/json' }), `${fileBase(data)}-nrs-draft-data.json`)}>
+                    Download NRS draft data (JSON)
+                  </button>
+                  <p className="hint" style={{ marginTop: '0.5rem' }}>
+                    This JSON file contains structured {kind === 'invoice' ? 'invoice' : KIND_COPY[kind].noun} data prepared for NRS e-invoicing integration. You can download it for your records or use it with an NRS-supported submission method, where applicable.
+                  </p>
+                  <a className="btn primary full" href="https://einvoice.nrs.gov.ng" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', marginTop: '0.5rem' }}>
+                    Go to NRS Platform to Get Stamped
+                  </a>
+                </>
+              )}
+            </section>
+            )}
+
+            {nrsKind && data.nrsEnabled && (
+            <section className="card">
+              <h2 className="card-title">
+                <span className="step">{nextStep()}</span> NRS Validation Details
+              </h2>
+              <p className="hint">
+                After submitting your {kind === 'invoice' ? 'invoice' : KIND_COPY[kind].noun} through an NRS-supported process and receiving your IRN, cryptographic stamp and QR code, enter them below. Then click Generate to create your final stamped PDF.
+              </p>
+              <Input label="IRN (Invoice Reference Number)" value={data.nrsIrn} onChange={(v) => set('nrsIrn', v.trim())} placeholder="Paste the official IRN from NRS" />
+              <Input label="Cryptographic Stamp / CSID" value={data.nrsCsid} onChange={(v) => set('nrsCsid', v.trim())} placeholder="Paste the official CSID / stamp from NRS" />
+              <Input
+                label="QR code image URL (optional)"
+                value={data.nrsQrDataUrl.startsWith('data:') ? '' : data.nrsQrDataUrl}
+                onChange={(v) => set('nrsQrDataUrl', v.trim())}
+                placeholder="https://… or leave empty and upload below"
+              />
+              <div className="field">
+                <label className="label">Or upload QR code image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      if (typeof reader.result === 'string') set('nrsQrDataUrl', reader.result);
+                    };
+                    reader.readAsDataURL(f);
+                  }}
+                />
+                {data.nrsQrDataUrl && (
+                  <div style={{ marginTop: '0.5rem' }}>
+                    <img
+                      key={data.nrsQrDataUrl}
+                      src={data.nrsQrDataUrl}
+                      crossOrigin={data.nrsQrDataUrl.startsWith('data:') ? undefined : 'anonymous'}
+                      alt="NRS QR preview"
+                      style={{ maxWidth: 120, maxHeight: 120, border: '1px solid #ddd' }}
+                      onError={() => setQrBad(true)}
+                      onLoad={() => setQrBad(false)}
+                    />
+                    {qrBad && <p className="err">This link cannot be used in the PDF (the image is missing, or its website blocks other sites). Save the QR image to your device and upload it instead.</p>}
+                    <button type="button" className="btn outline sm" style={{ marginLeft: 8 }} onClick={() => set('nrsQrDataUrl', '')}>Clear QR</button>
+                  </div>
+                )}
+              </div>
+              <p className="hint">These fields are optional until you receive official NRS validation details. KACHIER never generates fake IRNs, stamps or QR codes.</p>
+            </section>
+            )}
+
             <section className="card">
               <h2 className="card-title">
                 <span className="step">{nextStep()}</span> {isReceipt ? 'Notes' : isWaybill ? 'Instructions & terms' : isVoucher ? 'Purpose of payment' : isNote ? 'Reason & terms' : 'Notes & terms'}
@@ -574,6 +728,9 @@ export function Editor({ kind, template }: { kind: DocKind; template?: TemplateI
                   </div>
                 </div>
               )}
+              <p className="doc-help" data-testid="doc-help">
+                <Info size={16} aria-hidden="true" /> <span>{KIND_HELP[kind]}</span>
+              </p>
               <button type="button" className="btn primary lg full" onClick={onGenerate}>
                 <FileText size={18} /> Generate {docWord}
               </button>

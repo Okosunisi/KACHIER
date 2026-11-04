@@ -1,4 +1,4 @@
--- KoboDox: run this ONCE in Supabase (SQL Editor -> New query -> paste -> Run).
+-- KACHIER: run this ONCE in Supabase (SQL Editor -> New query -> paste -> Run).
 -- Each person can only see and change their own rows (Row Level Security).
 
 create table if not exists public.sales_transactions (
@@ -12,8 +12,12 @@ create table if not exists public.sales_transactions (
   pay text not null check (pay in ('Cash', 'Bank Transfer', 'POS', 'Other')),
   customer text not null default '',
   notes text not null default '',
+  currency text not null default 'NGN',
   created_at timestamptz not null default now()
 );
+
+-- Optional migration for existing projects:
+-- alter table public.sales_transactions add column if not exists currency text not null default 'NGN';
 
 create table if not exists public.business_expenses (
   id text primary key,
@@ -40,3 +44,5 @@ create policy "own sales" on public.sales_transactions for all to authenticated
 drop policy if exists "own expenses" on public.business_expenses;
 create policy "own expenses" on public.business_expenses for all to authenticated
   using (user_id = auth.uid()) with check (user_id = auth.uid());
+
+-- PROJECTS UPDATE: after running this file, also run supabase/migrate-projects.sql (once).

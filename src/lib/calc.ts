@@ -29,6 +29,17 @@ export function lineTotal(item: Pick<LineItem, 'qty' | 'price'>): number {
   return Math.round(Math.max(0, parseNum(item.qty)) * toCents(item.price));
 }
 
+/** Shares `total` cents across lines in proportion to `weights`; the shares always add up to `total` exactly. */
+export function allocate(total: number, weights: number[]): number[] {
+  const sum = weights.reduce((a, b) => a + b, 0);
+  if (!sum || !total) return weights.map(() => 0);
+  const raw = weights.map((w) => (total * w) / sum);
+  const out = raw.map(Math.floor);
+  let left = total - out.reduce((a, b) => a + b, 0);
+  raw.map((r, i) => [r - out[i], i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left-- > 0) out[i]++; });
+  return out;
+}
+
 /** All money maths is done in whole cents to avoid floating point drift. */
 export function computeTotals(d: DocData): Totals {
   const lines = d.items.map(lineTotal);
@@ -41,7 +52,10 @@ export function computeTotals(d: DocData): Totals {
 
   const taxable = subtotal - discount;
   const taxRate = clamp(parseNum(d.taxRate), 0, 100);
-  const tax = Math.round((taxable * taxRate) / 100);
+  // Lines marked zero-rated or exempt carry no VAT. With no such lines this is the same as taxing the whole amount.
+  const lineDiscounts = allocate(discount, lines);
+  const vatBase = d.items.reduce((a, it, i) => (it.taxCategory === 'ZERO_VAT' || it.taxCategory === 'EXEMPTED' ? a : a + lines[i] - lineDiscounts[i]), 0);
+  const tax = Math.round((vatBase * taxRate) / 100);
 
   const charges = d.charges.map((c) => toCents(c.amount));
   const chargesTotal = charges.reduce((a, b) => a + b, 0);
@@ -63,6 +77,7 @@ export function computeTotals(d: DocData): Totals {
     taxable,
     taxRate,
     tax,
+    lineDiscounts,
     charges,
     chargesTotal,
     total,

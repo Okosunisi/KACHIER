@@ -1,4 +1,4 @@
-Fonts used by KoboDox (screen preview, printing and PDF files)
+Fonts used by KACHIER (screen preview, printing and PDF files)
 
 SnapSans-Regular.ttf, SnapSans-Bold.ttf
   Based on Carlito (Copyright 2013 The Carlito Project Authors, https://github.com/googlefonts/carlito).
@@ -8,4 +8,4 @@ SnapSerif-Regular.ttf, SnapSerif-Bold.ttf
   Based on Liberation Serif (Digitized data copyright (c) 2010 Google Corporation, Copyright (c) 2012 Red Hat, Inc.).
   Licensed under the SIL Open Font License, Version 1.1 (https://openfontlicense.org).
 
-The files were reduced to the characters KoboDox needs (including the Naira sign) and renamed, as the licence requires.
+The files were reduced to the characters KACHIER needs (including the Naira sign) and renamed, as the licence requires.

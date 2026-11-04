@@ -1,5 +1,5 @@
 /* =====================================================================
-   KoboDox - website styles (the invoice itself is styled in doc.css)
+   KACHIER - website styles (the invoice itself is styled in doc.css)
    ===================================================================== */
 :root {
   --brand: #0b6b57;
@@ -1322,3 +1322,74 @@ textarea {
   .hp-stat b { font-size: 0.95rem; }
   .hp-stat { padding: 8px 9px; }
 }
+
+.nrs-toggle { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; cursor: pointer; }
+.nrs-toggle input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--brand); flex: none; }
+.nrs-item { border-top: 1px dashed var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+.nrs-check { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: var(--brand-50); font-size: 0.88rem; }
+.nrs-check ul { margin: 6px 0 8px; padding-left: 18px; }
+.nrs-check .hint { margin: 8px 0 0; }
+
+/* ---- Projects ---- */
+.bk-projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.bk-proj { display: flex; flex-direction: column; gap: 8px; padding: 16px; }
+.bk-proj h3 { overflow-wrap: anywhere; }
+.bk-period { display: flex; flex-direction: column; gap: 10px; }
+.bk-check { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0 14px; font-size: 0.92rem; }
+.bk-check input { margin-top: 3px; }
+.bk-table a { color: #0b6b57; text-decoration: underline; }
+.bk-share { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+
+/* ---- Business Documents guide (additions) ---- */
+.docs-intro { display: flex; gap: 16px; align-items: center; justify-content: space-between; background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: var(--radius); padding: 16px 18px; margin: 14px 0; }
+.docs-intro h2 { margin: 0 0 6px; font-size: 1.05rem; color: var(--brand-dark); display: flex; gap: 8px; align-items: center; }
+.docs-intro p { margin: 0 0 6px; color: var(--text); line-height: 1.55; font-size: 0.92rem; }
+.docs-intro .btn { flex-shrink: 0; }
+.doc-help { display: flex; gap: 8px; align-items: flex-start; margin: 0 0 12px; padding: 10px 12px; background: var(--brand-50); border-radius: 10px; color: var(--brand-dark); font-size: 0.9rem; line-height: 1.45; }
+.doc-help svg { flex-shrink: 0; margin-top: 2px; }
+.docs-guide { padding-bottom: 40px; }
+.dg-head { padding: 18px 0 6px; }
+.dg-head h1 { margin: 0 0 4px; color: var(--ink); }
+.dg-block { margin: 22px 0; }
+.dg-block h2 { color: var(--ink); margin: 0 0 6px; }
+.dg-q { margin: 14px 0 8px; color: var(--ink); }
+.hmc-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.hmc-opt { text-align: left; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 14px; font: inherit; color: var(--ink); cursor: pointer; line-height: 1.4; box-shadow: var(--shadow-sm); }
+.hmc-opt:hover, .hmc-opt:focus-visible { border-color: var(--brand); background: var(--brand-50); outline: none; }
+.hmc-result { background: var(--surface); border: 2px solid var(--brand); border-radius: var(--radius); padding: 18px; margin-top: 12px; }
+.hmc-result h3 { margin: 8px 0 4px; font-size: 1.4rem; color: var(--brand-dark); }
+.hmc-note { background: #fff8e6; border: 1px solid #f3dca0; border-radius: 10px; padding: 10px 12px; font-size: 0.9rem; }
+.hmc-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.dg-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-top: 12px; }
+.dg-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; scroll-margin-top: 90px; }
+.dg-card h3 { margin: 0 0 8px; display: flex; gap: 8px; align-items: center; color: var(--ink); font-size: 1.05rem; }
+.dg-card h4 { margin: 12px 0 4px; color: var(--brand-dark); font-size: 0.95rem; }
+.dg-card p, .dg-card li { color: var(--text); line-height: 1.55; font-size: 0.93rem; margin: 0; }
+.dg-card ul { margin: 0; padding-left: 20px; }
+.dg-card .btn { margin-top: auto; }
+.dg-card .btn.full { margin-top: 16px; }
+.dg-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.dg-table { width: 100%; border-collapse: collapse; min-width: 420px; }
+.dg-table th, .dg-table td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 0.95rem; }
+.dg-table thead th { background: var(--brand-50); color: var(--brand-dark); }
+.dg-table tbody th { color: var(--ink); white-space: nowrap; }
+.dg-table tbody tr:last-child th, .dg-table tbody tr:last-child td { border-bottom: 0; }
+@media (max-width: 640px) {
+  .docs-intro { flex-direction: column; align-items: stretch; }
+  .docs-intro .btn { width: 100%; justify-content: center; }
+  .dg-cards { grid-template-columns: 1fr; }
+}
+
+/* ---- NRS Standard / Normal Business Document selector ---- */
+.mode-select { min-width: 0; }
+.mode-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.mode-opt { position: relative; display: flex; gap: 12px; align-items: flex-start; text-align: left; background: var(--surface); border: 2px solid var(--line-strong); border-radius: var(--radius); padding: 14px 40px 14px 14px; min-width: 0; width: 100%; box-sizing: border-box; font: inherit; color: var(--ink); cursor: pointer; }
+.mode-opt:hover, .mode-opt:focus-visible { border-color: var(--brand); outline: none; }
+.mode-opt.on { border-color: var(--brand); background: var(--brand-50); }
+.mode-ico { flex-shrink: 0; width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: var(--brand-50); color: var(--brand-dark); }
+.mode-opt.on .mode-ico { background: var(--brand); color: #fff; }
+.mode-txt { min-width: 0; display: flex; flex-direction: column; gap: 4px; line-height: 1.4; }
+.mode-txt span { font-size: 0.85rem; color: var(--text); }
+.mode-check { position: absolute; top: 12px; right: 12px; color: var(--brand); }
+.mode-note { margin: 10px 0 0; }
+@media (max-width: 640px) { .mode-options { grid-template-columns: minmax(0, 1fr); } }

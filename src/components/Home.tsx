@@ -5,23 +5,24 @@ import { KIND_COPY, KIND_ORDER } from '../lib/kinds';
 import { naira, sampleExpenses, sampleSales, sumExpenses, totals } from '../lib/books';
 import { Brand } from './ui';
 
-type Current = 'home' | 'sales' | 'reports' | DocKind;
+type Current = 'home' | 'sales' | 'reports' | 'documents' | DocKind;
 
 /** The three main sections. Business Documents opens the document maker (it has the switcher for every document type). */
 const SECTIONS = [
   { label: 'Business Documents', href: '#/invoice' },
-  { label: 'Sales Management', href: '#/sales' },
+  { label: 'Sales & Expenses', href: '#/sales' },
   { label: 'Business Reports', href: '#/reports' },
 ] as const;
 
 export function SiteHeader({ current }: { current: Current }) {
   const [open, setOpen] = useState(false);
   const isDoc = current !== 'home' && current !== 'sales' && current !== 'reports';
+  const isKind = isDoc && current !== 'documents';
   const on = (href: string) => (href === '#/sales' ? current === 'sales' : href === '#/reports' ? current === 'reports' : isDoc);
   return (
     <header className="site-header">
       <div className="container bar">
-        <a href="#/" className="brand-link" aria-label="KoboDox home" onClick={() => setOpen(false)}>
+        <a href="#/" className="brand-link" aria-label="KACHIER home" onClick={() => setOpen(false)}>
           <Brand />
         </a>
         <nav className="top-links" aria-label="Main">
@@ -48,10 +49,13 @@ export function SiteHeader({ current }: { current: Current }) {
         <div className="container doc-row">
           <div className="segmented small doc-switch" aria-label="Document type">
             {KIND_ORDER.map((k) => (
-              <a key={k} href={`#/${KIND_COPY[k].path}`} className={current === k ? 'on' : ''} aria-current={current === k ? 'page' : undefined}>
+              <a key={k} href={`#/${KIND_COPY[k].path}`} className={current === k && isKind ? 'on' : ''} aria-current={current === k && isKind ? 'page' : undefined}>
                 {KIND_COPY[k].Noun}
               </a>
             ))}
+            <a href="#/documents" className={current === 'documents' ? 'on' : ''} aria-current={current === 'documents' ? 'page' : undefined}>
+              Guide
+            </a>
           </div>
         </div>
       )}
@@ -62,8 +66,8 @@ export function SiteHeader({ current }: { current: Current }) {
 const DOC_LINKS: DocKind[] = ['invoice', 'quotation', 'receipt', 'sales-order', 'purchase-order', 'payment-voucher', 'credit-note', 'debit-note', 'waybill'];
 
 const FEATURES = [
-  { icon: BookOpen, title: 'Sales Management', text: 'Record daily sales, track quantities sold, monitor payment methods, and easily find previous transactions.', button: 'Manage Sales', href: '#/sales' },
-  { icon: BarChart3, title: 'Business Reports', text: 'Review daily, weekly, and monthly sales, record business expenses, and understand how your business is performing.', button: 'View Business Reports', href: '#/reports' },
+  { icon: BookOpen, title: 'Sales & Expenses', text: 'Create projects for your businesses, then record daily sales and the money you spend on each one.', button: 'Manage Sales & Expenses', href: '#/sales' },
+  { icon: BarChart3, title: 'Business Reports', text: 'See daily, weekly, monthly and yearly sales, expenses and net balance for all your projects together or one by one.', button: 'View Business Reports', href: '#/reports' },
   { icon: FileText, title: 'Business Documents', text: 'Create professional invoices, quotations, receipts, sales orders, purchase orders, payment vouchers, credit notes, debit notes, and waybills.', button: 'Create Documents', href: '#/invoice' },
 ];
 
@@ -181,7 +185,7 @@ export function Home() {
             <p className="muted">Your business records belong to you. Every person can see only their own records.</p>
           </div>
         </div>
-        <div className="container foot-base">© {new Date().getFullYear()} KoboDox. Simple bookkeeping for business owners.</div>
+        <div className="container foot-base">© {new Date().getFullYear()} KACHIER. Simple bookkeeping for business owners.</div>
       </footer>
     </div>
   );

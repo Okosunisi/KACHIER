@@ -1,4 +1,4 @@
-# KOBODOX
+# KACHIER
 
 Make professional **invoices, receipts, quotations, sales orders, purchase orders, payment vouchers, credit notes, debit notes and waybills** in seconds.
 No account, no server, no database. Everything runs in the browser and nothing you type is sent anywhere.

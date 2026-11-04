@@ -181,3 +181,16 @@ export const TOTAL_LABEL: Partial<Record<DocKind, string>> = {
   'sales-order': 'Order total',
 };
 
+
+/** Short help line shown next to the Generate button of each generator. */
+export const KIND_HELP: Record<DocKind, string> = {
+  invoice: 'Use this document to request payment from your customer.',
+  receipt: 'Use this document to confirm that you have received payment.',
+  quotation: 'Use this document to show your proposed prices before a customer agrees to buy.',
+  'sales-order': "Use this document to record a customer's confirmed order.",
+  'purchase-order': 'Use this document to request goods or services from a supplier.',
+  'payment-voucher': 'Use this document to record or authorise business payments.',
+  'credit-note': 'Use this document to record a reduction in an amount previously charged.',
+  'debit-note': 'Use this document to record an additional charge or upward adjustment.',
+  waybill: 'Use this document to record goods being transported or delivered.',
+};

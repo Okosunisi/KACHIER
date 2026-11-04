@@ -1,8 +1,8 @@
 {
-  "name": "kobodox",
+  "name": "kachier",
   "private": true,
   "version": "1.0.0",
-  "description": "KoboDox - simple bookkeeping and record-keeping for small and large business owners.",
+  "description": "KACHIER - simple bookkeeping and record-keeping for small and large business owners.",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -8,7 +8,7 @@ const KEY = String(import.meta.env.VITE_SUPABASE_ANON_KEY ?? '');
 export const cloudOn = Boolean(URL && KEY);
 
 interface Session { access_token: string; refresh_token: string; expires_at: number; email: string }
-const SK = 'kobodox:session:v1';
+const SK = 'kachier:session:v1';
 function readS(): Session | null {
   try {
     return JSON.parse(localStorage.getItem(SK) || 'null');

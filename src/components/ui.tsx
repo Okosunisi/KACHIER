@@ -207,7 +207,7 @@ export function Brand({ small }: { small?: boolean }) {
         </svg>
       </span>
       <span className="brand-word">
-        KOBO<b>DOX</b>
+        KA<b>CHIER</b>
       </span>
     </span>
   );

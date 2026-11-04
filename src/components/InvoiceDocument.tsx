@@ -11,13 +11,15 @@ function V({ v, ph }: { v: string; ph: string }) {
   return v.trim() ? <>{v}</> : <span className="ph">{ph}</span>;
 }
 
-function PartyBlock({ label, name, address, phone, email, namePh }: {
+function PartyBlock({ label, name, address, phone, email, namePh, taxId, regNo }: {
   label: string;
   name: string;
   address: string;
   phone: string;
   email: string;
   namePh: string;
+  taxId?: string;
+  regNo?: string;
 }) {
   return (
     <div className="party">
@@ -28,6 +30,8 @@ function PartyBlock({ label, name, address, phone, email, namePh }: {
       {address.trim() && <div className="pre">{address}</div>}
       {phone.trim() && <div>{phone}</div>}
       {email.trim() && <div>{email}</div>}
+      {taxId?.trim() && <div>Tax ID: {taxId.trim()}</div>}
+      {regNo?.trim() && <div>RC No.: {regNo.trim()}</div>}
     </div>
   );
 }
@@ -147,6 +151,8 @@ export function InvoiceDocument({ data }: { data: DocData }) {
           address={data.businessAddress}
           phone={data.businessPhone}
           email={data.businessEmail}
+          taxId={data.businessTaxId}
+          regNo={data.businessRegNo}
         />
         <PartyBlock
           label={model.toLabel}
@@ -155,6 +161,7 @@ export function InvoiceDocument({ data }: { data: DocData }) {
           address={data.customerAddress}
           phone={data.customerPhone}
           email={data.customerEmail}
+          taxId={data.customerTaxId}
         />
       </section>
 
@@ -248,6 +255,24 @@ export function InvoiceDocument({ data }: { data: DocData }) {
               <div className="pre">{model.terms}</div>
             </div>
           )}
+        </section>
+      )}
+
+      {model.taxInfo && (
+        <section className="notes single">
+          <div>
+            <h4 className="lbl">Tax information</h4>
+            <div className="pre">{model.taxInfo}</div>
+          </div>
+        </section>
+      )}
+
+      {data.nrsQrDataUrl?.trim() && (
+        <section className="notes single">
+          <div>
+            <h4 className="lbl">NRS QR code</h4>
+            <img src={data.nrsQrDataUrl} alt="Official NRS QR code" style={{ maxWidth: 140, maxHeight: 140 }} />
+          </div>
         </section>
       )}
 

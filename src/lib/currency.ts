@@ -12,7 +12,8 @@ export const CURRENCIES: Currency[] = [
   { code: 'GHS', symbol: 'GH₵', name: 'Ghanaian Cedi (GH₵)' },
   { code: 'KES', symbol: 'KSh ', name: 'Kenyan Shilling (KSh)' },
   { code: 'ZAR', symbol: 'R', name: 'South African Rand (R)' },
-  { code: 'XOF', symbol: 'CFA ', name: 'West African CFA Franc (CFA)' },
+  { code: 'XOF', symbol: 'CFA ', name: 'West African CFA Franc (XOF)' },
+  { code: 'XAF', symbol: 'FCFA ', name: 'Central African CFA Franc (XAF)' },
   { code: 'CAD', symbol: 'CA$', name: 'Canadian Dollar (CA$)' },
   { code: 'AUD', symbol: 'A$', name: 'Australian Dollar (A$)' },
 ];

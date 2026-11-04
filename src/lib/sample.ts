@@ -1,6 +1,7 @@
 import type { DocData, DocKind, PaymentStatus, TemplateId } from '../types';
 import { addDays, todayISO } from './dates';
 import { NUMBER_PREFIX } from './kinds';
+import { createDefaultDoc, newItem } from './storage';
 
 /** Realistic demo content used on the homepage and by the "Fill with sample data" button. */
 export function sampleDoc(kind: DocKind = 'invoice', template: TemplateId = 'classic', status: PaymentStatus = 'unpaid'): DocData {
@@ -32,13 +33,14 @@ export function sampleDoc(kind: DocKind = 'invoice', template: TemplateId = 'cla
       ['Curtains and rail installation', '', '1', '85000'],
       ['Project coordination (hours)', '', '12', '7500'],
     ]
-  ).map(([description, details, qty, price], i) => ({ id: `s${i + 1}`, description, details, qty, price, unit: '', weight: '' }));
+  ).map(([description, details, qty, price], i) => ({ ...newItem(), id: `s${i + 1}`, description, details, qty, price, unit: '', weight: '' }));
   const party = isPO
     ? { name: 'Lagos Fabrics & Furnishings Ltd', phone: '+234 807 555 0120', email: 'sales@lagosfabrics.ng', address: '8 Eric Moore Road, Surulere\nLagos, Nigeria' }
     : isVoucher
       ? { name: 'Ifeanyi Woodworks Ltd', phone: '+234 806 555 0133', email: 'accounts@ifeanyiwoodworks.ng', address: '3 Zik Avenue\nEnugu, Nigeria' }
       : { name: 'Emeka Okafor Properties', phone: '+234 809 555 0188', email: 'accounts@okaforproperties.ng', address: '27 Admiralty Way, Lekki Phase 1\nLagos, Nigeria' };
   return {
+    ...createDefaultDoc(kind),
     kind,
     template,
     businessName: 'Adaeze Interiors Ltd',
@@ -46,11 +48,16 @@ export function sampleDoc(kind: DocKind = 'invoice', template: TemplateId = 'cla
     businessPhone: '+234 803 555 0142',
     businessEmail: 'billing@adaezeinteriors.ng',
     businessAddress: '14 Ogui Road, Independence Layout\nEnugu, Nigeria',
+    businessTaxId: '0123456789012',
+    businessCity: 'Enugu',
+    customerCity: 'Lagos',
+    businessRegNo: 'RC 1234567',
 
     customerName: party.name,
     customerPhone: party.phone,
     customerEmail: party.email,
     customerAddress: party.address,
+    customerTaxId: isPO || isVoucher ? '' : '9876543210123',
 
     number: kind === 'waybill' ? 'WB-2026-0031' : kind === 'quotation' ? 'QTN-2026-0005' : isInvoice ? 'INV-2026-0012' : kind === 'receipt' ? 'RCT-2026-0007' : `${NUMBER_PREFIX[kind]}-2026-0008`,
     issueDate: today,
@@ -60,9 +67,9 @@ export function sampleDoc(kind: DocKind = 'invoice', template: TemplateId = 'cla
     items:
       kind === 'waybill'
         ? [
-            { id: 's1', description: 'Custom 3-seater sofa', details: 'Wrapped and crated, handle with care', qty: '2', price: '', unit: 'crates', weight: '84' },
-            { id: 's2', description: 'Curtains and rails', details: '', qty: '6', price: '', unit: 'cartons', weight: '36' },
-            { id: 's3', description: 'Decorative lamps', details: 'Fragile', qty: '4', price: '', unit: 'boxes', weight: '18.5' },
+            { ...newItem(), id: 's1', description: 'Custom 3-seater sofa', details: 'Wrapped and crated, handle with care', qty: '2', price: '', unit: 'crates', weight: '84' },
+            { ...newItem(), id: 's2', description: 'Curtains and rails', details: '', qty: '6', price: '', unit: 'cartons', weight: '36' },
+            { ...newItem(), id: 's3', description: 'Decorative lamps', details: 'Fragile', qty: '4', price: '', unit: 'boxes', weight: '18.5' },
           ]
         : demo,
     discountMode: 'percent',

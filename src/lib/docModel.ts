@@ -1,3 +1,4 @@
+import { nrsApplies, nrsTaxInfo } from './nrs';
 import type { DocData, StatusKey, Totals } from '../types';
 import { formatWeight, parseNum, statusLabel, toCents } from './calc';
 import { formatMoney, formatQty } from './currency';
@@ -11,6 +12,8 @@ export interface PayRow {
 
 export interface DocModel {
   title: string;
+  /** NRS "Tax information" block (VAT analysis and honest status). Empty unless NRS data is switched on. */
+  taxInfo?: string;
   /** Label/value pairs shown in the header. The first one is always the document number. */
   fields: Array<[string, string]>;
   /** null = this kind of document has no status badge (quotations). */
@@ -57,7 +60,7 @@ export const FREIGHT_PAYER_OPTIONS = [
  * Decides WHAT goes on the document. The on-screen preview, the printout and the PDF
  * all read from this one function so they always agree with each other.
  */
-export function buildModel(d: DocData): DocModel {
+function buildCore(d: DocData): DocModel {
   const issue = dash(formatDate(d.issueDate));
 
   if (d.kind === 'quotation') {
@@ -278,4 +281,9 @@ function buildOtherModel(d: DocData, issue: string): DocModel {
       };
     }
   }
+}
+
+export function buildModel(d: DocData): DocModel {
+  const m = buildCore(d);
+  return nrsApplies(d.kind) && d.nrsEnabled ? { ...m, taxInfo: nrsTaxInfo(d) } : m;
 }
