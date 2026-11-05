@@ -201,14 +201,7 @@ export function Modal({
 export function Brand({ small }: { small?: boolean }) {
   return (
     <span className={`brand-mark${small ? ' small' : ''}`}>
-      <span className="brand-icon" aria-hidden="true">
-        <svg viewBox="0 0 64 64" width="100%" height="100%">
-          <path d="M36 9 17 35h13l-3 20 20-28H33z" fill="#fff" />
-        </svg>
-      </span>
-      <span className="brand-word">
-        KA<b>CHIER</b>
-      </span>
+      <img className="brand-logo" src="/kachier-logo.png" alt="KACHIER" width={180} height={30} />
     </span>
   );
 }

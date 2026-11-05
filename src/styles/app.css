@@ -1393,3 +1393,7 @@ textarea {
 .mode-check { position: absolute; top: 12px; right: 12px; color: var(--brand); }
 .mode-note { margin: 10px 0 0; }
 @media (max-width: 640px) { .mode-options { grid-template-columns: minmax(0, 1fr); } }
+
+/* KACHIER logo image */
+.brand-logo { display: block; height: 30px; width: auto; max-width: 100%; }
+.brand-mark.small .brand-logo { height: 24px; }
