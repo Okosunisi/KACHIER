@@ -81,9 +81,7 @@ const BENEFITS = [
 ];
 
 export function Home() {
-  // Demonstration figures, worked out from the built-in sample records. They are never saved and never reach real reports.
-  const demo = totals(sampleSales());
-  const preview: Array<[string, string]> = [
+const preview: Array<[string, string]> = [
     ["Today's Sales", naira(demo.total)],
     ['Recorded Expenses', naira(sumExpenses(sampleExpenses()))],
     ['Transactions', String(demo.count)],
@@ -107,16 +105,6 @@ export function Home() {
                 Explore Business Documents
               </a>
             </div>
-            <div className="hp-preview" aria-label="Sample business summary">
-              {preview.map(([k, v]) => (
-                <div key={k} className="hp-stat">
-                  <span>{k}</span>
-                  <b>{v}</b>
-                </div>
-              ))}
-            </div>
-            <p className="hp-note">Sample figures for demonstration only. They are not real records.</p>
-          </div>
         </section>
 
         <section className="hp-section">
@@ -182,7 +170,7 @@ export function Home() {
           </div>
           <div>
             <strong>Privacy</strong>
-            <p className="muted">Your business records belong to you. Every person can see only their own records.</p>
+            <p className="muted">Your business records belong to you. As your Everyday transactions are documented as records only you have the access to.</p>
           </div>
         </div>
         <div className="container foot-base">© {new Date().getFullYear()} KACHIER. Simple bookkeeping for business owners.</div>
