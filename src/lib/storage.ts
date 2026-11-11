@@ -8,8 +8,8 @@ import { KIND_ORDER, NUMBER_PREFIX } from './kinds';
  * Every access is wrapped in try/catch because storage can be blocked (private mode, full disk, etc.).
  */
 
-const DRAFT_KEY = (k: DocKind) => `kachier:draft:v1:${k}`;
-const COUNTER_KEY = 'kachier:counter:v1';
+const DRAFT_KEY = (k: DocKind) => `snapbill:draft:v1:${k}`;
+const COUNTER_KEY = 'snapbill:counter:v1';
 
 export function uid(): string {
   try {

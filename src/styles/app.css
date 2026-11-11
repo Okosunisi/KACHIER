@@ -2,11 +2,11 @@
    KACHIER - website styles (the invoice itself is styled in doc.css)
    ===================================================================== */
 :root {
-  --brand: #0b6b57;
-  --brand-dark: #085444;
-  --brand-50: #ecf6f3;
-  --brand-100: #d5ebe4;
-  --ink: #0f172a;
+  --brand: #066151;
+  --brand-dark: #054a3e;
+  --brand-50: #e8f3f0;
+  --brand-100: #cfe6df;
+  --ink: #0a1420;
   --text: #334155;
   --muted: #64748b;
   --line: #e2e8f0;
@@ -16,8 +16,8 @@
   --danger: #b91c1c;
   --danger-bg: #fdecec;
   --radius: 14px;
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 8px 24px -8px rgba(15, 23, 42, 0.18);
+  --shadow-sm: 0 1px 2px rgba(10, 20, 32, 0.06), 0 1px 3px rgba(10, 20, 32, 0.05);
+  --shadow-md: 0 8px 24px -8px rgba(10, 20, 32, 0.18);
   --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -57,7 +57,7 @@ textarea {
   color: inherit;
 }
 :focus-visible {
-  outline: 3px solid rgba(11, 107, 87, 0.45);
+  outline: 3px solid rgba(6, 97, 81, 0.45);
   outline-offset: 2px;
 }
 .muted {
@@ -103,7 +103,7 @@ textarea {
 .btn.primary {
   background: var(--brand);
   color: #fff;
-  box-shadow: 0 6px 16px -6px rgba(11, 107, 87, 0.6);
+  box-shadow: 0 6px 16px -6px rgba(6, 97, 81, 0.6);
 }
 .btn.primary:hover:not(:disabled) {
   background: var(--brand-dark);
@@ -122,7 +122,7 @@ textarea {
   color: var(--text);
 }
 .btn.ghost:hover:not(:disabled) {
-  background: rgba(15, 23, 42, 0.06);
+  background: rgba(10, 20, 32, 0.06);
 }
 .btn.danger {
   background: var(--danger);
@@ -155,7 +155,7 @@ textarea {
   cursor: pointer;
 }
 .icon-btn:hover:not(:disabled) {
-  background: rgba(15, 23, 42, 0.07);
+  background: rgba(10, 20, 32, 0.07);
   color: var(--ink);
 }
 .icon-btn.danger:hover:not(:disabled) {
@@ -189,7 +189,7 @@ textarea {
   padding: 5px;
   border-radius: 10px;
   background: var(--brand);
-  box-shadow: 0 6px 14px -6px rgba(11, 107, 87, 0.7);
+  box-shadow: 0 6px 14px -6px rgba(6, 97, 81, 0.7);
 }
 .brand-word {
   font-weight: 800;
@@ -242,7 +242,7 @@ textarea {
   cursor: pointer;
 }
 .nav-link:hover {
-  background: rgba(15, 23, 42, 0.06);
+  background: rgba(10, 20, 32, 0.06);
 }
 
 /* ---------- Segmented control ---------- */
@@ -372,7 +372,7 @@ textarea {
   position: absolute;
   inset: 8% 4% auto 4%;
   height: 70%;
-  background: radial-gradient(closest-side, rgba(11, 107, 87, 0.22), transparent);
+  background: radial-gradient(closest-side, rgba(6, 97, 81, 0.22), transparent);
   filter: blur(30px);
   pointer-events: none;
 }
@@ -383,7 +383,7 @@ textarea {
   background: #fff;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 30px 60px -24px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(15, 23, 42, 0.07);
+  box-shadow: 0 30px 60px -24px rgba(10, 20, 32, 0.35), 0 0 0 1px rgba(10, 20, 32, 0.07);
 }
 .hero-paper {
   max-width: 560px;
@@ -433,7 +433,7 @@ textarea {
   border-color: var(--brand);
   background: var(--brand-50);
   color: var(--brand-dark);
-  box-shadow: 0 0 0 3px rgba(11, 107, 87, 0.12);
+  box-shadow: 0 0 0 3px rgba(6, 97, 81, 0.12);
 }
 
 .section {
@@ -507,7 +507,7 @@ textarea {
   transform: translateY(-4px);
 }
 .tpl-card .tpl-thumb {
-  box-shadow: 0 18px 36px -22px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 36px -22px rgba(10, 20, 32, 0.4), 0 0 0 1px rgba(10, 20, 32, 0.08);
 }
 .tpl-meta {
   display: flex;
@@ -526,7 +526,7 @@ textarea {
   text-align: center;
   padding: 40px 20px;
   border-radius: 24px;
-  background: linear-gradient(135deg, #0b6b57, #0a4f41);
+  background: linear-gradient(135deg, #066151, #0a4f41);
   color: #fff;
 }
 .final-cta h2 {
@@ -724,7 +724,7 @@ textarea {
 .field textarea:focus {
   outline: none;
   border-color: var(--brand);
-  box-shadow: 0 0 0 4px rgba(11, 107, 87, 0.14);
+  box-shadow: 0 0 0 4px rgba(6, 97, 81, 0.14);
 }
 .field.has-error input,
 .field.has-error select,
@@ -947,7 +947,7 @@ textarea {
 }
 .preview-paper .scaled-outer {
   background: #fff;
-  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.35);
+  box-shadow: 0 10px 30px -10px rgba(10, 20, 32, 0.35);
 }
 .desktop-only {
   display: none;
@@ -969,7 +969,7 @@ textarea {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid var(--line);
-  box-shadow: 0 -8px 24px -12px rgba(15, 23, 42, 0.25);
+  box-shadow: 0 -8px 24px -12px rgba(10, 20, 32, 0.25);
 }
 .mobile-bar .btn {
   min-width: 128px;
@@ -1018,7 +1018,7 @@ textarea {
   align-items: flex-end;
   justify-content: center;
   padding: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(10, 20, 32, 0.55);
   backdrop-filter: blur(3px);
   animation: fade 0.15s ease;
 }
@@ -1238,7 +1238,7 @@ textarea {
 /* ---- Sales Management and Business Reports ---- */
 .main-nav { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 8px; }
 .main-nav a { flex: 1 1 auto; text-align: center; padding: 8px 10px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: var(--muted, #5b6b66); background: transparent; }
-.main-nav a.on { background: #0b6b57; color: #fff; }
+.main-nav a.on { background: #066151; color: #fff; }
 .bk-page { padding-top: 20px; padding-bottom: 60px; display: flex; flex-direction: column; gap: 14px; }
 .bk-title { margin: 0; font-size: 1.6rem; }
 .bk-page h2, .bk-page h3 { margin: 0; }
@@ -1264,7 +1264,7 @@ textarea {
 .bk-tabs > * { min-width: max-content; }
 .bk-bars { display: flex; align-items: flex-end; gap: 3px; height: 170px; padding: 10px 8px 0; border: 1px solid #dbe5e1; border-radius: 12px; background: #fff; overflow-x: auto; }
 .bk-bar { flex: 1 0 18px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; }
-.bk-bar i { display: block; width: 100%; min-height: 2px; background: #0b6b57; border-radius: 4px 4px 0 0; }
+.bk-bar i { display: block; width: 100%; min-height: 2px; background: #066151; border-radius: 4px 4px 0 0; }
 .bk-bar small { font-size: 0.65rem; color: #5b6b66; }
 
 .bk-account { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 12px; font-size: 0.85rem; flex-wrap: wrap; }
@@ -1288,11 +1288,6 @@ textarea {
 .hp-hero .lead { margin: 0; max-width: 60ch; font-size: 1.02rem; line-height: 1.6; color: var(--text); }
 .hp-cta { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 22px; }
 .hp-cta .btn { flex: 1 1 220px; justify-content: center; min-height: 48px; }
-.hp-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 640px; }
-.hp-stat { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 10px 12px; box-shadow: var(--shadow-sm); min-width: 0; }
-.hp-stat span { display: block; font-size: 0.74rem; color: var(--muted); }
-.hp-stat b { display: block; margin-top: 2px; font-size: 1.05rem; color: var(--ink); overflow-wrap: anywhere; }
-.hp-note { margin: 8px 0 0; font-size: 0.78rem; color: var(--muted); }
 .hp-section { padding: 32px 0; }
 .hp-section.alt { background: var(--surface); border-block: 1px solid var(--line); }
 .hp-section h2 { margin: 0 0 16px; font-size: clamp(1.3rem, 4.5vw, 1.75rem); line-height: 1.2; color: var(--ink); }
@@ -1319,8 +1314,6 @@ textarea {
   .hp-section { padding: 48px 0; }
 }
 @media (max-width: 380px) {
-  .hp-stat b { font-size: 0.95rem; }
-  .hp-stat { padding: 8px 9px; }
 }
 
 .nrs-toggle { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; cursor: pointer; }
@@ -1337,7 +1330,7 @@ textarea {
 .bk-period { display: flex; flex-direction: column; gap: 10px; }
 .bk-check { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0 14px; font-size: 0.92rem; }
 .bk-check input { margin-top: 3px; }
-.bk-table a { color: #0b6b57; text-decoration: underline; }
+.bk-table a { color: #066151; text-decoration: underline; }
 .bk-share { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
 
 /* ---- Business Documents guide (additions) ---- */
@@ -1394,6 +1387,22 @@ textarea {
 .mode-note { margin: 10px 0 0; }
 @media (max-width: 640px) { .mode-options { grid-template-columns: minmax(0, 1fr); } }
 
-/* KACHIER logo image */
-.brand-logo { display: block; height: 30px; width: auto; max-width: 100%; }
+/* ---------- Privacy Policy ---------- */
+.legal { background: var(--surface, #fff); padding: 28px 0 56px; }
+.legal-wrap { max-width: 780px; }
+.legal h1 { margin: 18px 0 4px; font-size: clamp(1.8rem, 5vw, 2.4rem); line-height: 1.15; }
+.legal-date { margin: 0 0 16px; font-size: 0.9rem; }
+.legal-summary { padding: 14px 16px; border-radius: 12px; background: #e8f3f0; border: 1px solid #cfe6df; color: var(--ink); line-height: 1.55; }
+.legal-toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 8px; }
+.legal-toc a { font-size: 0.8rem; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); text-decoration: none; }
+.legal-toc a:hover { color: var(--brand); border-color: var(--brand); }
+.legal-sec { margin-top: 28px; scroll-margin-top: 90px; }
+.legal-sec h2 { font-size: 1.15rem; margin: 0 0 8px; color: var(--ink); }
+.legal-sec p, .legal-sec li { line-height: 1.7; color: #3b4658; }
+.legal-sec ul { padding-left: 20px; margin: 8px 0; }
+.legal-sec li { margin: 6px 0; }
+.legal-sec a { color: var(--brand); }
+
+.brand-logo { display: block; height: 28px; width: auto; }
 .brand-mark.small .brand-logo { height: 24px; }
+.legal-intro { margin: 0 0 8px; line-height: 1.65; color: var(--text); }

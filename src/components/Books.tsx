@@ -98,7 +98,7 @@ function SaleForm({ projectId, initial, onSave, onClose }: { projectId: string; 
   return (
     <Modal open onClose={onClose} title={initial ? 'Edit transaction' : 'Add transaction'}>
       <Input label="Date" type="date" required value={f.date} onChange={set('date')} error={e('date')} />
-      <Input label="Product or service name" required value={f.product} onChange={set('product')} error={e('product')} placeholder="e.g. Bread" />
+      <Input label="Product or service name" required value={f.product} onChange={set('product')} error={e('product')} />
       <Select label="Currency" value={f.currency} onChange={set('currency')} options={currencyOptions} />
       <div className="grid-2">
         <Input label="Quantity sold" required inputMode="decimal" value={f.qty} onChange={set('qty')} error={e('qty')} />
@@ -411,7 +411,7 @@ function Workspace({ projectId }: { projectId: string }) {
       <div className="bk-tabs"><Segmented label="Section" value={tab} onChange={changeTab} options={[{ value: 'sales', label: 'Sales' }, { value: 'expenses', label: 'Expenses' }]} /></div>
       {sample && (
         <Banner>
-          <b>Sample records, for demonstration only.</b> Abraham's Provision Store, 27 October 2026. Nothing here is saved or counted in your reports.
+          <b>Sample records, for demonstration only.</b> Abraham's Construction Company, 27 October 2026. Nothing here is saved or counted in your reports.
           <div className="bk-row"><button type="button" className="btn outline sm" onClick={startSample}>Reset sample</button><button type="button" className="btn primary sm" onClick={exitSample}>Exit sample</button></div>
         </Banner>
       )}

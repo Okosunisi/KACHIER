@@ -30,9 +30,9 @@ export interface Expense { id: string; date: string; name: string; amount: numbe
 export interface Project { id: string; name: string; description: string; created_at: string }
 export interface Range { from: string; to: string }
 
-const SALES_KEY = 'kachier:sales:v1';
-const EXP_KEY = 'kachier:expenses:v1';
-const PROJ_KEY = 'kachier:projects:v1';
+const SALES_KEY = 'kobodox:sales:v1';
+const EXP_KEY = 'kobodox:expenses:v1';
+const PROJ_KEY = 'kobodox:projects:v1';
 function load<T>(k: string): T[] {
   try {
     const v = JSON.parse(localStorage.getItem(k) || '[]');
@@ -148,13 +148,13 @@ export const SAMPLE_DATE = '2026-10-27';
 export const sampleSales = (): Sale[] =>
   (
     [
-      ['Bread', 10, 1500, 'Cash', 'NGN'],
-      ['Soft Drink', 12, 500, 'Bank Transfer', 'NGN'],
-      ['Rice', 5, 2000, 'POS', 'NGN'],
-      ['Eggs', 3, 4000, 'Bank Transfer', 'NGN'],
-      ['Noodles', 20, 800, 'Cash', 'NGN'],
-      ['Sneakers', 2, 50, 'Cash', 'USD'],
-      ['Handbag', 1, 40, 'Bank Transfer', 'GBP'],
+      ['Cement (50kg bags)', 200, 9500, 'Bank Transfer', 'NGN'],
+      ['Iron rods (16mm)', 150, 12000, 'Bank Transfer', 'NGN'],
+      ['Sharp sand (per trip)', 6, 85000, 'Cash', 'NGN'],
+      ['Granite (per trip)', 4, 120000, 'Bank Transfer', 'NGN'],
+      ['Mason and labour (per day)', 12, 15000, 'Cash', 'NGN'],
+      ['Site supervision fee', 1, 250000, 'Bank Transfer', 'NGN'],
+      ['Concrete mixer hire (per day)', 3, 40000, 'POS', 'NGN'],
     ] as const
   ).map(([product, qty, p, pay, currency], i) => ({
     id: `sample-${i}`,
@@ -170,7 +170,7 @@ export const sampleSales = (): Sale[] =>
     project_id: 'sample',
   }));
 export const sampleExpenses = (): Expense[] =>
-  ([['Transport', 'Transportation', 3000], ['Shop electricity', 'Electricity', 5000], ['Packaging bags', 'Packaging', 2000], ['Shop cleaning', 'Other', 1000]] as const).map(([name, category, a], i) => ({
+  ([['Site transport', 'Transportation', 45000], ['Site generator fuel', 'Electricity', 60000], ['Equipment repairs', 'Repairs and Maintenance', 35000], ['Safety gear', 'Other', 25000]] as const).map(([name, category, a], i) => ({
     id: `sample-${i}`, date: SAMPLE_DATE, name, category, amount: a * 100, pay: 'Cash' as Pay, notes: '', project_id: 'sample',
   }));
 
@@ -285,7 +285,7 @@ export interface PdfSection { head: string[]; rows: string[][]; foot?: string[] 
 export async function makePdf(file: string, title: string, subtitle: string, sections: PdfSection[]) {
   const [{ jsPDF }, { default: autoTable }] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
   const b64 = async (n: string) => {
-    const b = new Uint8Array(await (await fetch(`/fonts/${n}.ttf?v=2`)).arrayBuffer());
+    const b = new Uint8Array(await (await fetch(`/fonts/${n}.ttf`)).arrayBuffer());
     let bin = '';
     for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode(...b.subarray(i, i + 0x8000));
     return btoa(bin);
@@ -322,7 +322,7 @@ export const reportSentence = (who: string, label: string, f: Fin) =>
 export async function makeReportPdf(inp: ReportPdfInput): Promise<Blob> {
   const [{ jsPDF }, { default: autoTable }] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
   const b64 = async (n: string) => {
-    const b = new Uint8Array(await (await fetch(`/fonts/${n}.ttf?v=2`)).arrayBuffer());
+    const b = new Uint8Array(await (await fetch(`/fonts/${n}.ttf`)).arrayBuffer());
     let bin = '';
     for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode(...b.subarray(i, i + 0x8000));
     return btoa(bin);

@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { ArrowRight, BarChart3, BookOpen, Check, FileText, Menu, X } from 'lucide-react';
 import type { DocKind } from '../types';
 import { KIND_COPY, KIND_ORDER } from '../lib/kinds';
-import { naira, sampleExpenses, sampleSales, sumExpenses, totals } from '../lib/books';
 import { Brand } from './ui';
 
-type Current = 'home' | 'sales' | 'reports' | 'documents' | DocKind;
+type Current = 'home' | 'sales' | 'reports' | 'documents' | 'privacy' | DocKind;
 
 /** The three main sections. Business Documents opens the document maker (it has the switcher for every document type). */
 const SECTIONS = [
@@ -16,7 +15,7 @@ const SECTIONS = [
 
 export function SiteHeader({ current }: { current: Current }) {
   const [open, setOpen] = useState(false);
-  const isDoc = current !== 'home' && current !== 'sales' && current !== 'reports';
+  const isDoc = current !== 'home' && current !== 'sales' && current !== 'reports' && current !== 'privacy';
   const isKind = isDoc && current !== 'documents';
   const on = (href: string) => (href === '#/sales' ? current === 'sales' : href === '#/reports' ? current === 'reports' : isDoc);
   return (
@@ -80,12 +79,34 @@ const BENEFITS = [
   'Access useful business reports in one place.',
 ];
 
+export function SiteFooter() {
+  return (
+    <footer className="site-footer">
+      <div className="container foot-grid">
+        <div>
+          <Brand small />
+          <p className="muted">Simple bookkeeping and record-keeping for small and large business owners.</p>
+        </div>
+        <div>
+          <strong>Sections</strong>
+          {SECTIONS.map((s) => (
+            <a key={s.href} href={s.href}>
+              {s.label}
+            </a>
+          ))}
+        </div>
+        <div>
+          <strong>Privacy</strong>
+          <p className="muted">Your business records belong to you. Every person can see only their own records.</p>
+          <a href="#/privacy">Privacy Policy</a>
+        </div>
+      </div>
+      <div className="container foot-base">© {new Date().getFullYear()} KACHIER. Simple bookkeeping for business owners.</div>
+    </footer>
+  );
+}
+
 export function Home() {
-const preview: Array<[string, string]> = [
-    ["Today's Sales", naira(demo.total)],
-    ['Recorded Expenses', naira(sumExpenses(sampleExpenses()))],
-    ['Transactions', String(demo.count)],
-  ];
   return (
     <div className="app-shell home">
       <SiteHeader current="home" />
@@ -105,6 +126,7 @@ const preview: Array<[string, string]> = [
                 Explore Business Documents
               </a>
             </div>
+          </div>
         </section>
 
         <section className="hp-section">
@@ -154,27 +176,7 @@ const preview: Array<[string, string]> = [
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="container foot-grid">
-          <div>
-            <Brand small />
-            <p className="muted">Simple bookkeeping and record-keeping for small and large business owners.</p>
-          </div>
-          <div>
-            <strong>Sections</strong>
-            {SECTIONS.map((s) => (
-              <a key={s.href} href={s.href}>
-                {s.label}
-              </a>
-            ))}
-          </div>
-          <div>
-            <strong>Privacy</strong>
-            <p className="muted">Your business records belong to you. As your Everyday transactions are documented as records only you have the access to.</p>
-          </div>
-        </div>
-        <div className="container foot-base">© {new Date().getFullYear()} KACHIER. Simple bookkeeping for business owners.</div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

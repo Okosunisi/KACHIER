@@ -201,7 +201,7 @@ export function Modal({
 export function Brand({ small }: { small?: boolean }) {
   return (
     <span className={`brand-mark${small ? ' small' : ''}`}>
-      <img className="brand-logo" src="/kachier-logo.png" alt="KACHIER" width={180} height={30} />
+      <img className="brand-logo" src="/logo.png" alt="KACHIER" />
     </span>
   );
 }

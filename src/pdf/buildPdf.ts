@@ -100,13 +100,9 @@ function loadFonts(): Promise<Record<FontKey, FontFile>> {
     const base = (import.meta as unknown as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/';
     fontsPromise = Promise.all(
       FONT_KEYS.map(async (key) => {
-        const res = await fetch(`${base}fonts/${key}.ttf?v=2`);
+        const res = await fetch(`${base}fonts/${key}.ttf`);
         if (!res.ok) throw new Error(`Could not load font ${key}`);
         const buf = await res.arrayBuffer();
-        const sig = new Uint8Array(buf.slice(0, 4));
-        const sigText = String.fromCharCode(sig[0], sig[1], sig[2], sig[3]);
-        const isFont = (sig[0] === 0 && sig[1] === 1 && sig[2] === 0 && sig[3] === 0) || sigText === 'true' || sigText === 'OTTO';
-        if (!isFont) throw new Error(`Font file ${key} is missing or invalid`);
         return [key, { base64: toBase64(buf), glyphs: readGlyphs(buf) }] as const;
       }),
     )

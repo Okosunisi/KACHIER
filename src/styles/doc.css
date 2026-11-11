@@ -1,28 +1,28 @@
 /* ---------- Fonts used inside invoices (also embedded in the PDF) ---------- */
 @font-face {
   font-family: 'SnapSans';
-  src: url('/fonts/SnapSans-Regular.ttf?v=2') format('truetype');
+  src: url('/fonts/SnapSans-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'SnapSans';
-  src: url('/fonts/SnapSans-Bold.ttf?v=2') format('truetype');
+  src: url('/fonts/SnapSans-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'SnapSerif';
-  src: url('/fonts/SnapSerif-Regular.ttf?v=2') format('truetype');
+  src: url('/fonts/SnapSerif-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'SnapSerif';
-  src: url('/fonts/SnapSerif-Bold.ttf?v=2') format('truetype');
+  src: url('/fonts/SnapSerif-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
