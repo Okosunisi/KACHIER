@@ -1,7 +1,7 @@
 import { addDays, formatDate, parseISO, toISO, todayISO } from './dates';
 import { CURRENCIES, DEFAULT_CURRENCY, formatMoney, getCurrency } from './currency';
 import { saveBlob } from './files';
-import { cloudOn, rest } from './cloud';
+import { cloudActive, rest } from './cloud';
 import { loadDraft } from './storage';
 
 /** Sales and spending records. Kept in this browser for now (see load/save): one place to swap for Supabase later. */
@@ -60,7 +60,7 @@ function normalizeSale(s: Sale): Sale {
 
 /** Every read and write goes through these six functions: the database (Supabase) when it is set up, this device otherwise. */
 async function list<T>(t: Table): Promise<T[]> {
-  if (!cloudOn) return load<T>(KEYS[t]);
+  if (!cloudActive()) return load<T>(KEYS[t]);
   const all: T[] = [];
   for (let off = 0; ; off += 1000) {
     const page = await rest<T[]>(`${t}?select=*&order=${t === 'projects' ? 'created_at.asc' : 'date.desc'}&limit=1000&offset=${off}`);
@@ -69,7 +69,7 @@ async function list<T>(t: Table): Promise<T[]> {
   }
 }
 async function put<T extends { id: string }>(t: Table, item: T) {
-  if (cloudOn) return rest(`${t}?on_conflict=id`, { method: 'POST', body: item, upsert: true });
+  if (cloudActive()) return rest(`${t}?on_conflict=id`, { method: 'POST', body: item, upsert: true });
   const l = load<T>(KEYS[t]);
   const i = l.findIndex((x) => x.id === item.id);
   if (i < 0) l.push(item);
@@ -77,7 +77,7 @@ async function put<T extends { id: string }>(t: Table, item: T) {
   if (!save(KEYS[t], l)) throw new Error(FULL);
 }
 async function drop(t: Table, id: string) {
-  if (cloudOn) return rest(`${t}?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
+  if (cloudActive()) return rest(`${t}?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
   if (!save(KEYS[t], load<{ id: string }>(KEYS[t]).filter((x) => x.id !== id))) throw new Error(FULL);
 }
 const normalizeExpense = (e: Expense): Expense => ({ ...e, category: LEGACY_CATS[e.category] ?? e.category, pay: (e.pay ?? '') as Expense['pay'], project_id: e.project_id ?? '' });
@@ -116,7 +116,7 @@ export const putProject = (p: Project) => put('projects', p);
 /** Deletes a project and, only after the person has confirmed, every sale and expense inside it. */
 export async function dropProject(id: string) {
   const q = encodeURIComponent(id);
-  if (cloudOn) {
+  if (cloudActive()) {
     await rest(`sales_transactions?project_id=eq.${q}`, { method: 'DELETE' });
     await rest(`business_expenses?project_id=eq.${q}`, { method: 'DELETE' });
     return drop('projects', id);
@@ -127,7 +127,7 @@ export async function dropProject(id: string) {
 export const newProject = (name: string, description: string): Project => ({ id: newId(), name: name.trim(), description: description.trim(), created_at: new Date().toISOString() });
 
 /** Records typed before the database was switched on (they only exist in this browser). */
-export const localCount = () => load(SALES_KEY).length + load(EXP_KEY).length;
+export const localCount = () => load(SALES_KEY).length + load(EXP_KEY).length + load(PROJ_KEY).length;
 export async function moveLocalToCloud() {
   for (const t of ['projects', 'sales_transactions', 'business_expenses'] as Table[]) { // projects first, because sales and expenses point at them
     const items = load<{ id: string }>(KEYS[t]);

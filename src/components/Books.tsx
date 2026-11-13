@@ -9,7 +9,8 @@ import {
   byCategory, deliverReport, fin, makeReportPdf, monthlyBreakdown, reportSentence, newPState, periodLabel, rangeOf, stepPeriod, NET_NOTE,
 } from '../lib/books';
 import type { Books, Expense, Fin, Pay, PdfSection, Project, PState, Sale } from '../lib/books';
-import { cloudOn, sessionEmail, signIn, signOut, signUp } from '../lib/cloud';
+import { AUTH_EVENT, cloudOn, sessionEmail, signOut } from '../lib/cloud';
+import { AuthModal } from './AuthModal';
 
 type Msg = { ok: boolean; text: string } | null;
 const payOpts = PAYS.map((p) => ({ value: p, label: p }));
@@ -306,13 +307,16 @@ function ProjectsPage() {
   const [msg, setMsg] = useState<Msg>(null);
   const [form, setForm] = useState<'new' | Project | null>(null);
   const [del, setDel] = useState<Project | null>(null);
+  const [authOpen, setAuthOpen] = useState(false);
+  /** With Supabase on, people must have an account before they create a project. */
+  const startNew = () => { if (cloudOn && !sessionEmail()) setAuthOpen(true); else setForm('new'); };
   const reload = () => loadBooks().then(setBooks).catch((e: Error) => setMsg({ ok: false, text: e.message }));
   useEffect(() => { void reload(); }, []);
   const fail = (e: unknown) => setMsg({ ok: false, text: (e as Error).message });
   return (
     <Page title="My Projects" intro="Create projects to organise and manage your business records separately.">
       {msg && <Banner ok={msg.ok}>{msg.text}</Banner>}
-      <div className="bk-row"><button type="button" className="btn primary lg" onClick={() => setForm('new')}><Plus size={18} /> Create New Project</button></div>
+      <div className="bk-row"><button type="button" className="btn primary lg" onClick={startNew}><Plus size={18} /> Create New Project</button></div>
       {!books ? <p className="bk-empty">Loading your projects...</p> : !books.projects.length ? (
         <p className="bk-empty">You have no projects yet. Tap Create New Project to start recording your sales and expenses.</p>
       ) : (
@@ -335,6 +339,7 @@ function ProjectsPage() {
           })}
         </div>
       )}
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onDone={() => { setAuthOpen(false); void reload(); setForm('new'); }} />
       {form && (
         <ProjectForm
           initial={form === 'new' ? null : form}
@@ -561,43 +566,36 @@ function ReportsPage({ projectId }: { projectId?: string }) {
   );
 }
 
-/** With Supabase on, people must sign in first. Without it, the pages open straight away. */
+/** With Supabase on, people can look around freely and sign in only when they create a project (or tap Sign in). Without it, the pages open straight away. */
 function Gate({ children }: { children: ReactNode }) {
   const [email, setEmail] = useState(sessionEmail());
-  const [f, setF] = useState({ email: '', pw: '' });
-  const [up, setUp] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState<Msg>(null);
   const [local, setLocal] = useState(localCount());
+  const [authOpen, setAuthOpen] = useState(false);
+  const [msg, setMsg] = useState<Msg>(null);
   const [k, setK] = useState(0);
+  useEffect(() => {
+    const sync = () => { setEmail(sessionEmail()); setLocal(localCount()); };
+    window.addEventListener(AUTH_EVENT, sync);
+    return () => window.removeEventListener(AUTH_EVENT, sync);
+  }, []);
   if (!cloudOn) return <>{children}</>;
-  const submit = async () => {
-    if (!f.email.includes('@') || f.pw.length < 6) return setMsg({ ok: false, text: 'Enter your email and a password of at least 6 characters.' });
-    setBusy(true);
-    try {
-      if (up && !(await signUp(f.email.trim(), f.pw))) setMsg({ ok: true, text: 'Account created. Check your email and tap the confirmation link, then sign in here.' });
-      else { if (!up) await signIn(f.email.trim(), f.pw); setEmail(sessionEmail()); setMsg(null); }
-    } catch (e) { setMsg({ ok: false, text: (e as Error).message }); }
-    setBusy(false);
-  };
-  if (!email) {
-    return (
-      <Page title={up ? 'Create your account' : 'Sign in'} intro="Your projects, sales and expenses are saved in your own account, so they are safe on any phone or computer.">
-        {msg && <Banner ok={msg.ok}>{msg.text}</Banner>}
-        <Input label="Email" type="email" value={f.email} onChange={(v) => setF({ ...f, email: v })} />
-        <Input label="Password" type="password" value={f.pw} onChange={(v) => setF({ ...f, pw: v })} hint="At least 6 characters" />
-        <button type="button" className="btn primary lg full" disabled={busy} onClick={() => void submit()}>{busy ? 'Please wait...' : up ? 'Create account' : 'Sign in'}</button>
-        <button type="button" className="btn ghost full" onClick={() => { setUp(!up); setMsg(null); }}>{up ? 'I already have an account' : 'New here? Create an account'}</button>
-      </Page>
-    );
-  }
   return (
     <>
       <div className="container bk-account">
-        <span>Signed in as <b>{email}</b></span>
-        <button type="button" className="btn outline sm" onClick={() => { signOut(); setEmail(null); }}>Sign out</button>
+        {email ? (
+          <>
+            <span>Signed in as <b>{email}</b></span>
+            <button type="button" className="btn outline sm" onClick={() => { signOut(); setK(k + 1); }}>Sign out</button>
+          </>
+        ) : (
+          <>
+            <span>You are not signed in. Your records stay on this device.</span>
+            <button type="button" className="btn outline sm" onClick={() => setAuthOpen(true)}>Sign in</button>
+          </>
+        )}
       </div>
-      {local > 0 && (
+      {msg && <div className="container"><Banner ok={msg.ok}>{msg.text}</Banner></div>}
+      {email && local > 0 && (
         <div className="container">
           <Banner>
             You have {local} record{local === 1 ? '' : 's'} saved only on this device.
@@ -608,6 +606,7 @@ function Gate({ children }: { children: ReactNode }) {
         </div>
       )}
       <div key={k}>{children}</div>
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onDone={() => { setAuthOpen(false); setK(k + 1); }} />
     </>
   );
 }
