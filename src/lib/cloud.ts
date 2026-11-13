@@ -16,6 +16,8 @@ function readS(): Session | null {
     return null;
   }
 }
+/** Fired whenever someone signs in, signs out, or their login expires, so open screens can refresh. */
+export const AUTH_EVENT = 'kachier:auth';
 function writeS(s: Session | null) {
   try {
     if (s) localStorage.setItem(SK, JSON.stringify(s));
@@ -23,8 +25,11 @@ function writeS(s: Session | null) {
   } catch {
     /* ignore */
   }
+  window.dispatchEvent(new Event(AUTH_EVENT));
 }
 export const sessionEmail = (): string | null => readS()?.email ?? null;
+/** True when Supabase is set up and someone is signed in. Signed-out visitors keep their records on this device. */
+export const cloudActive = (): boolean => cloudOn && readS() !== null;
 
 async function auth(path: string, body: unknown) {
   const r = await fetch(`${URL}/auth/v1/${path}`, { method: 'POST', headers: { apikey: KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
