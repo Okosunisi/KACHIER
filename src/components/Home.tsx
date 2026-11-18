@@ -97,7 +97,7 @@ export function SiteFooter() {
         </div>
         <div>
           <strong>Privacy</strong>
-          <p className="muted">Your business records belong to you. Every person can see only their own records.</p>
+          <p className="muted">Your business information is private. Your records are accessible only to you and are not visible to other users.</p>
           <a href="#/privacy">Privacy Policy</a>
         </div>
       </div>
