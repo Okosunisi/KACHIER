@@ -1406,3 +1406,20 @@ textarea {
 .brand-logo { display: block; height: 28px; width: auto; }
 .brand-mark.small .brand-logo { height: 24px; }
 .legal-intro { margin: 0 0 8px; line-height: 1.65; color: var(--text); }
+
+/* ---- Contact section (home page) and footer contact column ---- */
+.hp-sub { margin: -6px 0 16px; max-width: 60ch; color: var(--text); line-height: 1.55; }
+.hp-contact-link { color: var(--brand-dark); font-weight: 700; font-size: 1.05rem; text-decoration: none; overflow-wrap: anywhere; }
+.hp-contact-link:hover { text-decoration: underline; }
+.hp-contact-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.hp-contact-actions .btn { min-height: 44px; }
+@media (min-width: 640px) {
+  .hp-features.hp-contact { grid-template-columns: repeat(2, 1fr); max-width: 860px; }
+}
+.foot-grid a { overflow-wrap: anywhere; }
+@media (min-width: 720px) {
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 960px) {
+  .foot-grid { grid-template-columns: 1.4fr 1fr 1.4fr 1.3fr; }
+}
