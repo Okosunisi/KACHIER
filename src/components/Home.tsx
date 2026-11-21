@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, BarChart3, BookOpen, Check, FileText, Menu, X } from 'lucide-react';
+import { ArrowRight, BarChart3, BookOpen, Check, FileText, Mail, Menu, MessageCircle, Phone, X } from 'lucide-react';
 import type { DocKind } from '../types';
 import { KIND_COPY, KIND_ORDER } from '../lib/kinds';
 import { Brand } from './ui';
@@ -62,6 +62,11 @@ export function SiteHeader({ current }: { current: Current }) {
   );
 }
 
+const CONTACT_EMAIL = 'officialkachier@gmail.com';
+const CONTACT_PHONE = '+234 813 970 5721';
+const CONTACT_TEL = '+2348139705721';
+const WHATSAPP_URL = 'https://wa.me/2348139705721';
+
 const DOC_LINKS: DocKind[] = ['invoice', 'quotation', 'receipt', 'sales-order', 'purchase-order', 'payment-voucher', 'credit-note', 'debit-note', 'waybill'];
 
 const FEATURES = [
@@ -99,6 +104,14 @@ export function SiteFooter() {
           <strong>Privacy</strong>
           <p className="muted">Your business information is private. Your records are accessible only to you and are not visible to other users.</p>
           <a href="#/privacy">Privacy Policy</a>
+        </div>
+        <div>
+          <strong>Contact</strong>
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          <a href={`tel:${CONTACT_TEL}`}>{CONTACT_PHONE}</a>
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+            Chat on WhatsApp
+          </a>
         </div>
       </div>
       <div className="container foot-base">© {new Date().getFullYear()} KACHIER. Simple bookkeeping for business owners.</div>
@@ -172,6 +185,48 @@ export function Home() {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+
+        <section className="hp-section alt" id="contact">
+          <div className="container">
+            <h2>Contact Us</h2>
+            <p className="hp-sub">Have a question or need help getting started? Reach the KACHIER team by email, call or WhatsApp.</p>
+            <div className="hp-features hp-contact">
+              <div className="hp-feature">
+                <span className="hp-icon" aria-hidden="true">
+                  <Mail size={22} />
+                </span>
+                <h3>Email Us</h3>
+                <p>Send us your question or feedback and we will get back to you.</p>
+                <a className="hp-contact-link" href={`mailto:${CONTACT_EMAIL}`}>
+                  {CONTACT_EMAIL}
+                </a>
+                <div className="hp-contact-actions">
+                  <a className="btn outline" href={`mailto:${CONTACT_EMAIL}`}>
+                    Send an Email
+                  </a>
+                </div>
+              </div>
+              <div className="hp-feature">
+                <span className="hp-icon" aria-hidden="true">
+                  <Phone size={22} />
+                </span>
+                <h3>Call or WhatsApp</h3>
+                <p>Our company number is available on WhatsApp and for mobile calls.</p>
+                <a className="hp-contact-link" href={`tel:${CONTACT_TEL}`}>
+                  {CONTACT_PHONE}
+                </a>
+                <div className="hp-contact-actions">
+                  <a className="btn primary" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                    <MessageCircle size={18} aria-hidden="true" /> Chat on WhatsApp
+                  </a>
+                  <a className="btn outline" href={`tel:${CONTACT_TEL}`}>
+                    <Phone size={18} aria-hidden="true" /> Call Now
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </main>
