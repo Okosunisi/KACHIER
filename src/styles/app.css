@@ -1423,3 +1423,15 @@ textarea {
 @media (min-width: 960px) {
   .foot-grid { grid-template-columns: 1.4fr 1fr 1.4fr 1.3fr; }
 }
+
+/* ---- Install-to-home-screen pop-up (home page) ---- */
+.install-card { position: fixed; z-index: 90; top: calc(12px + env(safe-area-inset-top, 0px)); left: 12px; right: 12px; max-width: 520px; margin-inline: auto; display: grid; grid-template-columns: 44px 1fr auto; gap: 4px 12px; align-items: center; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow-md); animation: install-in 0.3s ease-out both; }
+.install-icon { width: 44px; height: 44px; border-radius: 12px; }
+.install-copy h2 { margin: 0; font-size: 1rem; line-height: 1.25; color: var(--ink); }
+.install-copy p { margin: 2px 0 0; font-size: 0.9rem; line-height: 1.4; color: var(--muted); }
+.install-x { width: 36px; height: 36px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: var(--bg, #eef2f6); color: var(--muted); cursor: pointer; }
+.install-steps { grid-column: 1 / -1; margin: 8px 0 0; padding-left: 20px; font-size: 0.92rem; line-height: 1.7; color: var(--text); }
+.install-steps svg { vertical-align: -3px; }
+.install-btn { grid-column: 1 / -1; margin-top: 8px; }
+@keyframes install-in { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .install-card { animation: none; } }
