@@ -3,6 +3,7 @@ import { ArrowRight, BarChart3, BookOpen, Check, FileText, Mail, Menu, MessageCi
 import type { DocKind } from '../types';
 import { KIND_COPY, KIND_ORDER } from '../lib/kinds';
 import { Brand } from './ui';
+import { InstallPrompt } from './InstallPrompt';
 
 type Current = 'home' | 'sales' | 'reports' | 'documents' | 'privacy' | DocKind;
 
@@ -123,6 +124,7 @@ export function Home() {
   return (
     <div className="app-shell home">
       <SiteHeader current="home" />
+      <InstallPrompt />
       <main>
         <section className="hp-hero">
           <div className="container">
