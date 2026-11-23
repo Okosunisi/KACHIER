@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { CookieNotice } from './components/CookieNotice';
 import './styles/app.css';
 import './styles/doc.css';
 import './lib/install';
@@ -11,6 +12,7 @@ initAnalytics();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
+    <CookieNotice />
   </StrictMode>,
 );
 

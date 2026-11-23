@@ -19,7 +19,7 @@ const POINTS: Array<{ title: string; text: React.ReactNode }> = [
   },
   {
     title: 'Website analytics',
-    text: 'We use Google Analytics to count visits and see which pages are opened, so we can improve KACHIER. It records things like the pages you view, your device type and your approximate location, and it may set cookies on your device. It does not receive your sales, expenses, document details or password. You can stop it with your browser settings or a content blocker.',
+    text: 'We use Google Analytics to count visits and see which pages are opened, so we can improve KACHIER. It records things like the pages you view, your device type and your approximate location, and it sets cookies on your device. It runs only if you tap Accept on the cookie notice. It does not receive your sales, expenses, document details or password. You can change your choice at any time with Cookie settings in the footer.',
   },
   {
     title: 'Sharing',
