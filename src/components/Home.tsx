@@ -4,6 +4,7 @@ import type { DocKind } from '../types';
 import { KIND_COPY, KIND_ORDER } from '../lib/kinds';
 import { Brand } from './ui';
 import { InstallPrompt } from './InstallPrompt';
+import { openCookieSettings } from '../lib/analytics';
 
 type Current = 'home' | 'sales' | 'reports' | 'documents' | 'privacy' | DocKind;
 
@@ -105,6 +106,9 @@ export function SiteFooter() {
           <strong>Privacy</strong>
           <p className="muted">Your business information is private. Your records are accessible only to you and are not visible to other users.</p>
           <a href="#/privacy">Privacy Policy</a>
+          <button type="button" className="link-btn" onClick={openCookieSettings}>
+            Cookie settings
+          </button>
         </div>
         <div>
           <strong>Contact</strong>
