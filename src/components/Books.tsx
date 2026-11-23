@@ -400,6 +400,19 @@ function Workspace({ projectId }: { projectId: string }) {
   const commit = async (op: () => Promise<void>, patch: (b: Books) => Books, ok: string) => {
     try { await op(); setBooks((b) => (b ? patch(b) : b)); setMsg({ ok: true, text: ok }); } catch (e) { setMsg({ ok: false, text: (e as Error).message }); }
   };
+  /** After saving, move the view to the saved date when it is outside the period on screen, so the new record is not hidden. */
+  const showDate = (date: string) => {
+    if (inRange(date, r)) return;
+    setPs((p) => {
+      if (p.period === 'monthly') return { ...p, anchor: `${date.slice(0, 7)}-01` };
+      if (p.period === 'yearly') return { ...p, anchor: `${date.slice(0, 4)}-01-01` };
+      if (p.period === 'custom') {
+        const all = [date, p.from, p.to].sort();
+        return { ...p, from: all[0], to: all[2] };
+      }
+      return { ...p, anchor: date };
+    });
+  };
   const startSample = () => { setSample(true); setPs({ ...newPState('daily'), anchor: SAMPLE_DATE }); setQ(''); setPay('all'); setCat('all'); };
   const exitSample = () => { setSample(false); setPs(newPState('daily')); setMsg(null); };
   const firstSales = !sample && tab === 'sales' && mine.s.length === 0;
@@ -475,9 +488,9 @@ function Workspace({ projectId }: { projectId: string }) {
         </>
       ))}
 
-      {sEdit && <SaleForm projectId={projectId} initial={sEdit === 'new' ? null : sEdit} onClose={() => setSEdit(null)} onSave={(s) => { setSEdit(null); void commit(() => putSale(s), (b) => ({ ...b, sales: upsert(b.sales, s) }), 'Transaction saved.'); }} />}
+      {sEdit && <SaleForm projectId={projectId} initial={sEdit === 'new' ? null : sEdit} onClose={() => setSEdit(null)} onSave={(s) => { setSEdit(null); showDate(s.date); void commit(() => putSale(s), (b) => ({ ...b, sales: upsert(b.sales, s) }), `Transaction saved for ${formatDate(s.date)}.`); }} />}
       {sDel && <Confirm what="transaction" onNo={() => setSDel(null)} onYes={() => { const s = sDel; setSDel(null); void commit(() => dropSale(s.id), (b) => ({ ...b, sales: b.sales.filter((x) => x.id !== s.id) }), 'Transaction deleted.'); }} />}
-      {eEdit && <ExpenseForm projectId={projectId} initial={eEdit === 'new' ? null : eEdit} onClose={() => setEEdit(null)} onSave={(x) => { setEEdit(null); void commit(() => putExpense(x), (b) => ({ ...b, expenses: upsert(b.expenses, x) }), 'Expense saved.'); }} />}
+      {eEdit && <ExpenseForm projectId={projectId} initial={eEdit === 'new' ? null : eEdit} onClose={() => setEEdit(null)} onSave={(x) => { setEEdit(null); showDate(x.date); void commit(() => putExpense(x), (b) => ({ ...b, expenses: upsert(b.expenses, x) }), `Expense saved for ${formatDate(x.date)}.`); }} />}
       {eDel && <Confirm what="expense" onNo={() => setEDel(null)} onYes={() => { const x = eDel; setEDel(null); void commit(() => dropExpense(x.id), (b) => ({ ...b, expenses: b.expenses.filter((y) => y.id !== x.id) }), 'Expense deleted.'); }} />}
     </Page>
   );
