@@ -6,6 +6,7 @@ import { Home, SiteHeader } from './components/Home';
 import { Privacy } from './components/Privacy';
 import { Reports, Sales } from './components/Books';
 import { KIND_COPY, KIND_ORDER } from './lib/kinds';
+import { trackPageView } from './lib/analytics';
 
 interface Route {
   page: 'home' | 'sales' | 'reports' | 'documents' | 'privacy' | DocKind;
@@ -41,12 +42,17 @@ const homeTitle = 'KACHIER - Simple Bookkeeping for Business Owners';
 const pageTitle = (page: Route['page']) =>
   page === 'home' ? homeTitle : page === 'privacy' ? 'Privacy Policy - KACHIER' : page === 'documents' ? 'Understand Business Documents - KACHIER' : page === 'sales' ? 'Sales & Expenses - KACHIER' : page === 'reports' ? 'Business Reports - KACHIER' : `Create a ${KIND_COPY[page].noun} - KACHIER`;
 
+/** Clean path used for analytics, so reports show /sales and /reports instead of every project id. */
+const pagePath = (page: Route['page']) =>
+  page === 'home' ? '/' : page === 'sales' || page === 'reports' || page === 'documents' || page === 'privacy' ? `/${page}` : `/${KIND_COPY[page].path}`;
+
 export default function App() {
   const route = useRoute();
 
   useEffect(() => {
     document.title = pageTitle(route.page);
     window.scrollTo(0, 0);
+    trackPageView(pagePath(route.page), pageTitle(route.page));
   }, [route.page, route.key]);
 
   if (route.page === 'home') return <Home />;

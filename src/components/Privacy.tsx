@@ -1,8 +1,8 @@
 import { SiteFooter } from './Home';
 
 /** Put your support email here (for example 'support@yourdomain.com'). When it is set, it shows in the policy. */
-const CONTACT_EMAIL = '';
-const EFFECTIVE = '11 November 2026';
+const CONTACT_EMAIL = 'officialkachier@gmail.com';
+const EFFECTIVE = '23 November 2026';
 
 const POINTS: Array<{ title: string; text: React.ReactNode }> = [
   {
@@ -18,8 +18,12 @@ const POINTS: Array<{ title: string; text: React.ReactNode }> = [
     text: 'Until you sign in, your records stay in your own browser on your device. When you sign in, they are saved to your private account so you can open them on any device. Each person can see only their own records.',
   },
   {
+    title: 'Website analytics',
+    text: 'We use Google Analytics to count visits and see which pages are opened, so we can improve KACHIER. It records things like the pages you view, your device type and your approximate location, and it may set cookies on your device. It does not receive your sales, expenses, document details or password. You can stop it with your browser settings or a content blocker.',
+  },
+  {
     title: 'Sharing',
-    text: 'We share data only with the services that host KACHIER, when you choose to share a document (for example on WhatsApp), or when the law requires it.',
+    text: 'We share data only with the services that host KACHIER, the analytics service described above, when you choose to share a document (for example on WhatsApp), or when the law requires it.',
   },
   {
     title: 'Security',
